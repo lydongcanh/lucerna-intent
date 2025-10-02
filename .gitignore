@@ -1,0 +1,120 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.manifest
+*.spec
+
+# Byte-compiled / optimized / DLL files
+*.dll
+*.dylib
+*.exe
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# --- Poetry ---
+.venv/
+# lock file optional — commit if app, ignore if lib
+# poetry.lock
+
+# --- FastAPI / Uvicorn ---
+*.log
+
+# --- Editors & IDEs ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- MyPy / Type checker ---
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# --- Pyre type checker ---
+.pyre/
+
+# --- Ruff / Linting ---
+.ruff_cache/
+
+# --- Docker ---
+# Docker build files & artifacts
+*.pid
+*.seed
+*.bak
+*.old
+docker-compose.override.yml
+.docker/
+.dockerignore
+# Local volumes
+volumes/
+# Image tarballs
+*.tar
+
+# --- Kubernetes / EKS ---
+# Kube configs (don’t commit personal/cluster creds!)
+.kube/
+*.kubeconfig
+kubeconfig-*
+kubeconfigs/
+*.out
+
+# Local manifests
+tmp/
+*.yaml~
+*.yml~
+*.json~
+# Helm generated files
+charts/*/charts/
+charts/*/tmpcharts/
+charts/*/requirements.lock
+charts/*/values.schema.json
+helmfile.d/
+helmfile.yaml.lock
+.helm/
+helm-cache/
+helm-release.yaml
+.release/
+
+# --- Env & secrets ---
+.env
+.env.*
+*.local
+secrets/
+*.crt
+*.key
+*.pem
+*.token
+
+# --- Jupyter / IPython ---
+.ipynb_checkpoints
+profile_default/
+ipython_config.py
+
+# --- SQLite ---
+*.db
+*.sqlite3
+*.sqlite

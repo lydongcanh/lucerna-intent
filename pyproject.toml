@@ -3,15 +3,19 @@ name = "lucerna-intent"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Ted Ly",email = "ted.ly@ansarada.com"}
+    {name = "Ted Ly",email = "lydongcanh@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<4.0"
 dependencies = [
+    "fastapi[standard] (>=0.118.0,<0.119.0)",
+    "llama-index-llms-groq (>=0.4.1,<0.5.0)",
+    "llama-index (>=0.14.3,<0.15.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)"
 ]
 
 [tool.poetry]
-packages = [{include = "lucerna_intent", from = "src"}]
+packages = [{include = "service_host", from = "src" }]
 
 
 [build-system]
