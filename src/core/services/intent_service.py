@@ -1,16 +1,14 @@
-import os
 import json
 
 from llama_index.llms.groq import Groq
 from llama_index.core.llms import ChatMessage
 from core.models.intents import IntentIn, IntentOut
+from core.utils.env import get_required_env
 
 class IntentService:
     def __init__(self):
-        model = os.getenv("LLM_MODEL")
-        api_key = os.getenv("GROQ_API_KEY")
-        if model is None or api_key is None:
-            raise ValueError("LLM_MODEL and GROQ_API_KEY environment variables must be set")
+        model = get_required_env("LLM_MODEL")
+        api_key = get_required_env("GROQ_API_KEY")
         
         self.llm = Groq(model=model, api_key=api_key)
 
