@@ -16,7 +16,7 @@ class IntentService:
     async def extract_intents(self, intent: IntentIn) -> IntentOut:
         system_prompt = ChatMessage(role="system", content="You are a intent extractor.")
         user_prompt = ChatMessage(
-            role="user", 
+            role="user",
             content=f"""
             Extract the {intent.intent_names} from the following message: {intent.message}. 
             Return result as a json dict with intent names as keys and their values as the extracted text.

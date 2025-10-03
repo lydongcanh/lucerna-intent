@@ -6,12 +6,12 @@ Designed for compliance-safe analytics: no raw text is stored, only intent label
 ## Run the app
 ```bash
 # For development
-fastapi dev src/service_host/main.py
+PYTHONPATH=src fastapi dev src/service_host/main.py
 ```
 
 ```bash
 # For production
-fastapi run src/service_host/main.py
+PYTHONPATH=src fastapi run src/service_host/main.py
 ```
 
 - Server started at: http://127.0.0.1:8000
