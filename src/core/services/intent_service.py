@@ -14,6 +14,9 @@ class IntentService:
 
 
     async def extract_intents(self, intent: IntentIn) -> IntentOut:
+        if (not intent.intent_names) or (not intent.message):
+            return IntentOut(message=intent.message, intent_names=intent.intent_names, extracted_intents={})
+        
         system_prompt = ChatMessage(role="system", content="You are a intent extractor.")
         user_prompt = ChatMessage(
             role="user",
@@ -26,7 +29,7 @@ class IntentService:
 
         content = getattr(response.message, "content", None) or getattr(response, "message", None)
         if content is None:
-            raise ValueError("LLM did not return any content")
+            return IntentOut(message=intent.message, intent_names=intent.intent_names, extracted_intents={})
 
         extracted_intents = {}
         try:
