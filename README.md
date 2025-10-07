@@ -8,13 +8,13 @@ Designed for compliance-safe analytics, no raw text is stored, only intent label
 ## Supported intents
 | Intent Name         | Description                                              | Example Output                         |
 | ------------------- | -------------------------------------------------------- | -------------------------------------- |
-| `category`          | The general type of product or concept being asked about | `"virtual data room"`                  |
-| `feature_focus`     | The specific feature or aspect the user is focusing on   | `"access control"`                     |
-| `purpose`           | The reason or goal behind the user’s question            | `"for due diligence"`                  |
-| `tone`              | The sentiment or tone (optional)                         | `"curious"`                            |
-| `decision_context`  | The broader context of decision-making                   | `"selecting a vendor for M&A project"` |
-| `entity_primary`    | The main product or subject                              | `"CompanyA"`                           |
-| `action_intent`     | What the user wants to do                                | `"compare"` or `"learn differences"`   |
+| `category`          | The general type of product or concept being asked about | `virtual data room`                    |
+| `feature_focus`     | The specific feature or aspect the user is focusing on   | `access control`                       |
+| `purpose`           | The reason or goal behind the user’s question            | `for due diligence`                    |
+| `tone`              | The sentiment or tone (optional)                         | `curious`                              |
+| `decision_context`  | The broader context of decision-making                   | `selecting a vendor for M&A project`   |
+| `entity_primary`    | The main product or subject                              | `document`                             |
+| `action_intent`     | What the user wants to do                                | `compare` or `learn differences`       |
 
 ## Run the app
 ```bash
