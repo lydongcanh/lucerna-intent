@@ -6,6 +6,16 @@ from core.utils.env import get_required_env
 
 
 class IntentService:
+    DEFAULT_INTENT_NAMES = [
+        "entity_primary",
+        "category",
+        "feature_focus",
+        "purpose",
+        "decision_context",
+        "tone",
+        "action_intent",
+    ]
+
     def __init__(self):
         model = get_required_env("LLM_MODEL")
         api_key = get_required_env("GROQ_API_KEY")
@@ -13,10 +23,8 @@ class IntentService:
         self.llm = Groq(model=model, api_key=api_key)
 
     async def extract_intents(self, intent: IntentIn) -> IntentOut:
-        if not intent.intent_names or not intent.message:
+        if not intent.message:
             return IntentOut(
-                message=intent.message,
-                intent_names=intent.intent_names,
                 extracted_intents={}
             )
 
@@ -29,18 +37,11 @@ class IntentService:
             ),
         )
 
-        example_intent_names = ["greeting", "product_interest"]
-        example_message = "Hi, I’d like to know more about your pricing."
-        example_output = {
-            "greeting": "Hi",
-            "product_interest": "pricing"
-        }
-
         user_prompt = ChatMessage(
             role="user",
             content=(
                 f"""You must extract the following intents from the message below.
-                Intents: {intent.intent_names}
+                Intents: {self.DEFAULT_INTENT_NAMES}
 
                 Message: "{intent.message}"
 
@@ -49,11 +50,6 @@ class IntentService:
                 - If an intent is not found, use an empty string.
                 - Keep values short and meaningful.
                 - Output must be a valid JSON object with keys exactly matching the intent names.
-
-                Example:
-                Input Intents: {example_intent_names}
-                Message: "{example_message}"
-                Output: {json.dumps(example_output, ensure_ascii=False)}
 
                 Now, extract the intents for the message above and return only JSON.
                 """
@@ -64,12 +60,12 @@ class IntentService:
 
         content = getattr(response.message, "content", None) or getattr(response, "message", None)
         if not content:
-            return IntentOut(message=intent.message, intent_names=intent.intent_names, extracted_intents={})
+            return IntentOut(extracted_intents={})
 
         cleaned = self._clean_response(content)
         extracted_intents = await self._parse_or_retry(cleaned, intent, system_prompt)
 
-        return IntentOut(message=intent.message, intent_names=intent.intent_names, extracted_intents=extracted_intents)
+        return IntentOut(extracted_intents=extracted_intents)
 
     def _clean_response(self, text: str) -> str:
         cleaned = text.strip()

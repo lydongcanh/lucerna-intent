@@ -1,7 +1,7 @@
 [project]
 name = "lucerna-intent"
 version = "0.1.0"
-description = ""
+description = "A companion service for Lucerna that classifies user messages into feature intents."
 authors = [
     {name = "Ted Ly",email = "lydongcanh@gmail.com"}
 ]
