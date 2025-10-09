@@ -101,7 +101,6 @@ helm-release.yaml
 
 # --- Env & secrets ---
 .env
-.env.*
 *.local
 secrets/
 *.crt
