@@ -68,8 +68,6 @@ class IntentCanonicalizer:
             cutoff=self.similarity_threshold
         )
 
-        print(f"Canonicalizing intent '{intent_name}': extracted '{extracted_value}' -> matched '{matches[0] if matches else ''}'")
-
         return matches[0] if matches else extracted_value
     
     def canonicalize_intents(self, extracted_intents: Dict[str, Any]) -> Dict[str, str]:

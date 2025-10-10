@@ -11,15 +11,15 @@ class IntentService:
     Intent service orchestration for extracting intents from user messages.
     """
 
-    DEFAULT_INTENT_NAMES = [
-        "category",
-        "feature_focus",
-        "purpose",
-        "tone",
-        "decision_context",
-        "entity_primary",
-        "action_intent",
-    ]
+    INTENT_SCHEMA = {
+        "category": "High-level topic of the message (e.g., 'document', 'deal', 'feature', 'issue').",
+        "feature_focus": "Specific product feature or function the message relates to (e.g., 'summarization', 'translation', 'upload').",
+        "purpose": "User’s goal or motivation (e.g., 'understand importance', 'compare tools', 'fix issue').",
+        "tone": "Emotional tone of the message (e.g., 'neutral', 'frustrated', 'curious', 'positive').",
+        "decision_context": "Context in which the user is making a decision (e.g., 'room', 'project', 'review').",
+        "entity_primary": "Main entity being discussed (e.g., 'document', 'user', 'feature', 'deal').",
+        "action_intent": "Core action the user wants to perform (e.g., 'summarize', 'compare', 'analyze', 'upload')."
+    }
 
     def __init__(self):
         model = get_required_env("LLM_MODEL")
@@ -30,40 +30,32 @@ class IntentService:
 
     async def extract_intents(self, intent: IntentIn) -> IntentOut:
         if not intent.message:
-            return IntentOut(
-                extracted_intents={}
-            )
+            return IntentOut(extracted_intents={})
+
+        intent_guidelines = "\n".join(
+            [f"- **{key}**: {desc}" for key, desc in self.INTENT_SCHEMA.items()]
+        )
 
         system_prompt = ChatMessage(
             role="system",
             content=(
-                "You are a precise intent extractor."
-                + "You must extract key information from a user message according to predefined intent names."
-                + "Return only a valid JSON object. Do not include explanations or markdown formatting."
-                + "Use these exact intent names: " + ", ".join(self.DEFAULT_INTENT_NAMES) + "."
-                + "    For each intent:"
-                + "    - Always return a short string (1-3 words)."
-                + "    - If multiple options apply, choose the most specific one."
-                + "    - Use consistent phrasing (e.g., \"summarize\", not \"summarize_and_explain\")."
+                "You are a precise and deterministic intent extractor."
+                " Extract exactly the defined intents from a user message using consistent phrasing."
+                " Output strictly valid JSON. Do not include explanations or markdown formatting."
+                "\n\nIntent definitions:\n" + intent_guidelines +
+                "\n\nRules:\n"
+                "- Return only a JSON object with these exact keys.\n"
+                "- Each value must be a short phrase (1–3 words).\n"
+                "- If uncertain, return an empty string for that field.\n"
+                "- Use consistent and generic phrasing (e.g., 'summarize', not 'summarize_and_explain').\n"
             )
         )
 
         user_prompt = ChatMessage(
             role="user",
             content=(
-                f"""You must extract the following intents from the message below.
-                Intents: {self.DEFAULT_INTENT_NAMES}
-
-                Message: "{intent.message}"
-
-                Guidelines:
-                - Only extract values relevant to each intent.
-                - If an intent is not found, use an empty string.
-                - Keep values short and meaningful.
-                - Output must be a valid JSON object with keys exactly matching the intent names.
-
-                Now, extract the intents for the message above and return only JSON.
-                """
+                f"Message: \"{intent.message}\"\n\n"
+                "Extract intents according to the schema and return valid JSON only."
             )
         )
 
@@ -74,9 +66,12 @@ class IntentService:
             return IntentOut(extracted_intents={})
 
         cleaned = self._clean_response(content)
-        extracted_intents = json.loads(cleaned) if cleaned else {}
+        try:
+            extracted_intents = json.loads(cleaned)
+        except Exception:
+            extracted_intents = {}
+
         canonicalized_intents = self.canonicalizer.canonicalize_intents(extracted_intents)
-        
         return IntentOut(extracted_intents=canonicalized_intents)
 
     def _clean_response(self, text: str) -> str:
@@ -86,4 +81,3 @@ class IntentService:
             if cleaned.lower().startswith("json"):
                 cleaned = cleaned[4:]
         return cleaned.strip()
-
